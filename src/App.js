@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
-import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
-import Collapse from 'material-ui/transitions/Collapse';
-import IconButton from 'material-ui/IconButton';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import Card, { CardHeader, CardContent } from 'material-ui/Card';
 import './App.css';
 
 
@@ -104,6 +101,12 @@ class App extends Component {
   style = {
     title: {
       padding: 20
+    },
+    envs: {
+      padding: 10
+    },
+    envsButton: {
+      margin: 4
     }
   }
 
@@ -138,10 +141,13 @@ class App extends Component {
   render() {
     return <Paper>
       <h2 style={this.style.title}>Algorithms available on Userfeeds Platform</h2>
-      <Button variant="raised" color="primary" onClick={() => {this.getAlgortihms('local')}}>Local</Button>
-      <Button variant="raised" color="primary" onClick={() => {this.getAlgortihms('development')}}>Development</Button>
-      <Button variant="raised" color="primary" onClick={() => {this.getAlgortihms('staging')}}>Staging</Button>
-      <Button variant="raised" color="primary" onClick={() => {this.getAlgortihms('production')}}>Production</Button>
+      <Paper style={this.style.envs}>
+        Environment: 
+        <Button variant="raised" color="primary" style={this.style.envsButton} onClick={() => {this.getAlgortihms('local')}}>Local</Button>
+        <Button variant="raised" color="primary" style={this.style.envsButton} onClick={() => {this.getAlgortihms('development')}}>Development</Button>
+        <Button variant="raised" color="primary" style={this.style.envsButton} onClick={() => {this.getAlgortihms('staging')}}>Staging</Button>
+        <Button variant="raised" color="primary" style={this.style.envsButton} onClick={() => {this.getAlgortihms('production')}}>Production</Button>
+      </Paper>
       {Object.keys(this.state.algorithms).map(key => <Algo key={key} api={this.state.api} data={this.state.algorithms[key]}/>)}
     </Paper>
   }
