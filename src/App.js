@@ -8,8 +8,6 @@ import IconButton from 'material-ui/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import './App.css';
 
-const API = "http://localhost:8000"
-
 
 class Form extends Component {
 
@@ -28,6 +26,7 @@ class Form extends Component {
 
   constructor(params) {
     super()
+    this.api = params.api;
     this.spec = params.spec;
     this.algo = params.algo;
     this.state = {
@@ -37,7 +36,7 @@ class Form extends Component {
   }
 
   async fetch() {
-    let response = await fetch(`${API}`, {
+    let response = await fetch(`${this.api}`, {
       body: JSON.stringify({
         flow: [
           {
@@ -69,6 +68,7 @@ class Form extends Component {
       <form noValidate autoComplete="off"> 
         {Object.keys(this.spec.params || {}).map(param =>
           <TextField
+            key={param}
             style={this.style.input}
             required={this.spec.params[param]}
             id={param}
@@ -94,7 +94,7 @@ const Algo = function Algo (params) {
     />
     <CardContent>
       <pre>{params.data.docs}</pre>
-      <Form algo={params.data.name} spec={params.data.spec}/>
+      <Form api={params.api} algo={params.data.name} spec={params.data.spec}/>
     </CardContent>
   </Card>;
 }
@@ -107,6 +107,13 @@ class App extends Component {
     }
   }
 
+  envs = {
+    local: "http://localhost:8000",
+    development: "http://api-dev.userfeeds.io/ranking",
+    staging: "http://api-staging.userfeeds.io/ranking",
+    production: "http://api.userfeeds.io/ranking",
+  }
+
   constructor() {
     super();
     this.state = {
@@ -115,22 +122,27 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    const algorithms = await this.getAlgortihms();
-    this.setState({
-      algorithms: algorithms.items
-    })
+    await this.getAlgortihms('production');
   }
 
-  async getAlgortihms() {
-    const response = await fetch(`${API}/experimental_algos`);
-    return await response.json(); 
+  async getAlgortihms(env) {
+    const api = this.envs[env];
+    const response = await fetch(`${api}/experimental_algos`);
+    const data = await response.json(); 
+    this.setState({
+      algorithms: data.items,
+      api
+    });
   }
 
   render() {
-    console.log(this.state);
     return <Paper>
       <h2 style={this.style.title}>Algorithms available on Userfeeds Platform</h2>
-      {Object.keys(this.state.algorithms).map(key => <Algo data={this.state.algorithms[key]}/>)}
+      <Button variant="raised" color="primary" onClick={() => {this.getAlgortihms('local')}}>Local</Button>
+      <Button variant="raised" color="primary" onClick={() => {this.getAlgortihms('development')}}>Development</Button>
+      <Button variant="raised" color="primary" onClick={() => {this.getAlgortihms('staging')}}>Staging</Button>
+      <Button variant="raised" color="primary" onClick={() => {this.getAlgortihms('production')}}>Production</Button>
+      {Object.keys(this.state.algorithms).map(key => <Algo key={key} api={this.state.api} data={this.state.algorithms[key]}/>)}
     </Paper>
   }
 }
