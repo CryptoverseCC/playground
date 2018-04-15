@@ -46,7 +46,6 @@ class Form extends Component {
         'content-type': 'application/json'
       },
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      mode: 'no-cors'
     })
     let data = await response.json();
     this.setState({response: data});
@@ -131,9 +130,7 @@ class App extends Component {
 
   async getAlgortihms(env) {
     const api = this.envs[env];
-    const response = await fetch(`${api}/experimental_algos`, {
-      mode: 'no-cors',
-    });
+    const response = await fetch(`${api}/experimental_algos`);
     const data = await response.json(); 
     this.setState({
       algorithms: data.items,
