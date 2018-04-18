@@ -120,7 +120,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      algorithms: {}
+      algorithms: []
     };
   }
 
@@ -148,7 +148,7 @@ class App extends Component {
         <Button variant="raised" color="primary" style={this.style.envsButton} onClick={() => {this.getAlgortihms('staging')}}>Staging</Button>
         <Button variant="raised" color="primary" style={this.style.envsButton} onClick={() => {this.getAlgortihms('production')}}>Production</Button>
       </Paper>
-      {Object.keys(this.state.algorithms).map(key => <Algo key={key} api={this.state.api} data={this.state.algorithms[key]}/>)}
+      {this.state.algorithms.map(algo => <Algo key={algo.name} api={this.state.api} data={algo}/>)}
     </Paper>
   }
 }
