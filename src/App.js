@@ -85,9 +85,10 @@ class Form extends Component {
 
 
 const Algo = function Algo (params) {
+   let title = `${params.data.name} ${params.data.spec.pipeable?"(pipeable)":""}`;
    return <Card>
     <CardHeader
-      title={`${params.data.name}`}
+      title={title}
     />
     <CardContent>
       <pre>{params.data.docs}</pre>
